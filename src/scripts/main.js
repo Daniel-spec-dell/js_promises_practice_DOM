@@ -1,14 +1,24 @@
 'use strict';
 
 const firstPromise = new Promise((resolve, reject) => {
-  const timer = setTimeout(() => {
-    reject(new Error('First promise was rejected'));
-  }, 3000);
+  let isSettled = false;
 
-  document.addEventListener('click', () => {
+  function onClick() {
+    if (isSettled) {
+      return;
+    }
+    isSettled = true;
     clearTimeout(timer);
     resolve('First promise was resolved');
-  });
+    document.removeEventListener('click', onClick);
+  }
+
+  document.addEventListener('click', onClick);
+
+  const timer = setTimeout(() => {
+    reject(new Error('First promise was rejected'));
+    document.removeEventListener('click', onClick);
+  }, 3000);
 });
 
 const secondPromise = new Promise((resolve) => {

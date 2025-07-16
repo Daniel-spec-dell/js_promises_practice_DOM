@@ -1,13 +1,14 @@
 'use strict';
 
 const firstPromise = new Promise((resolve, reject) => {
-  document.addEventListener('click', () => {
-    resolve('First promise was resolved');
-  });
-
-  setTimeout(() => {
+  const timer = setTimeout(() => {
     reject(new Error('First promise was rejected'));
   }, 3000);
+
+  document.addEventListener('click', () => {
+    clearTimeout(timer);
+    resolve('First promise was resolved');
+  });
 });
 
 const secondPromise = new Promise((resolve) => {
